@@ -1,72 +1,88 @@
+import * as React from 'react';
 import axios from 'axios'
-import React from 'react'
+import { useNavigate } from 'react-router-dom';
+import './Login.css'
+import Alertt from './Alert';
+
+const login_api = 'http://localhost:8080/login'
 
 
 function Login() {
 	const [username, setUsername] = React.useState('')
 	const [password, setPassword] = React.useState('')
-	const [showRegister, setShowRegister] = React.useState(false);
+	const [showAlert, setShowAlert] = React.useState(false);
+	const [ch, setCh] = React.useState(0)
+	const navigate = useNavigate();
 
-	const handleRegister = () => { window.location.href = "/Register" };
-	const logindata = () => {
-		axios.post('http://localhost:8000/login', {
+	const handleRegister = () => { navigate('/Register') };
+	const logindata = (e) => {
+		e.preventDefault()
+		axios.post(login_api, {
 			username: username,
 			password: password
 		}).then((res) => {
-			console.log(res.data)
-			if (res.data.check == 2) {
-				localStorage.setItem('token',res.data.token)
-				alert("login success")
-				window.location.href = "/Test"
+			if (res.data.ch == 2) {
+				localStorage.setItem('token', res.data.token)
+				setCh(1)
+				setShowAlert(true)
+				setInterval(() => {
+					navigate('/Home')
+				}, 1500)
 				return
 			}
-			else if(res.data.check == 1){
-				alert("please fill the blank")
+			if (res.data.ch == 1) {
+				setCh(2)
+				setShowAlert(true)
 				return
-			}
-			alert("login failed")
 
-				
+			}
+			if (res.data.ch == 3 ){
+				setCh(3)
+				setShowAlert(true)
+			}
 		})
-		.catch((err) => {
-			console.log(err)
-		})
+			.catch((err) => {
+				console.log(err)
+			})
 	}
+
 	return (
-		<h1>
-			WELCOME
-			<h6>
-				Login
-			</h6>
-			<form>
-				<label for="InputUsername">username</label>
-				<input
-					type="email"
-					className="form-control"
-					id="exampleInputEmail1"
-					aria-describedby="emailHelp"
-					placeholder="Enter username"
-					onChange={e => setUsername(e.target.value)}
-				/>
-				<label for="Inputpassword">password</label>
-				<input
-					type="password"
-					className="form-control"
-					id="exampleInputPassword1"
-					placeholder="Enter password"
-					onChange={e => setPassword(e.target.value)}
-				/>
-			</form>
-			<button onClick={e => logindata()} type="submit" className="btn btn-primary">
-				Next
-			</button>
-			<div>
-				<h6>Do u not have accout?</h6>
-				<button onClick={handleRegister}>Register</button>
+		<>
+		<div className="container">
+			{showAlert && (Alertt(ch))}
+			<br/>
+			<div className="login-container">
+				<h1>WELCOME</h1>
+				<h2>Login</h2>
+				<form>
+					<label htmlFor="InputUsername">Username</label>
+					<input
+						type="email"
+						className="form-control"
+						id="exampleInputEmail1"
+						aria-describedby="emailHelp"
+						placeholder="Enter username"
+						onChange={e => setUsername(e.target.value)}
+					/>
+					<label htmlFor="Inputpassword">Password</label>
+					<input
+						type="password"
+						className="form-control"
+						id="exampleInputPassword1"
+						placeholder="Enter password"
+						onChange={e => setPassword(e.target.value)}
+					/>
+				</form>
+				<button onClick={e => logindata(e)} type="submit" className="btn btn-primary">
+					Next
+				</button>
+				<div>
+					<h3>Don't have an account?</h3>
+					<button onClick={handleRegister}>Register</button>
+				</div>
 			</div>
-		</h1>
-
-
+			</div>
+		</>
 	);
 }
 

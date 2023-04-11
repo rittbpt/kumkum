@@ -8,15 +8,17 @@ module.exports = function (app) {
     try {
       var ch = 0
       const user = new Userinfo(req.body);
-      if (user.username.trim() == "" || user.password.trim() == "") {
+      console.log(user)
+      if (user.username.trim() == "" || user.password.trim() == "" || user.last_name.trim() == "" || user.first_name.trim() == "") {
         ch = 1
         res.send({ ch })
         return
-      } 
+      }
       const finduser = await Userinfo.findOne({ username: user.username })
       if (finduser != null) {
         ch = 2
         res.send({ ch })
+        return
       }
       else {
         bcrypt.hash(user.password, saltRounds, async (err, hash) => {
@@ -26,6 +28,7 @@ module.exports = function (app) {
             await user.save();
             ch = 3
             res.send({ ch })
+            return
           }
         })
       }
@@ -41,7 +44,8 @@ module.exports = function (app) {
       const { username, password } = new Userinfo(req.body);
       if (username.trim() == "" || password.trim() == "") {
         ch = 1
-        res.send({ ch })
+        res.send({ ch: ch })
+        return
       }
       const finduser = await Userinfo.findOne({ username: username })
       bcrypt.compare(password, finduser.password, function (err, result) {
@@ -54,11 +58,11 @@ module.exports = function (app) {
             { expiresIn: "1h" }
           )
           res.send({ ch: ch, token: token })
+          return
         }
-        else {
-          ch = 3
-          res.send({ ch })
-        }
+        ch = 3
+        res.send({ ch: ch })
+        return
       })
     }
     catch (err) {
@@ -66,14 +70,14 @@ module.exports = function (app) {
     }
   });
 
-  app.get('/show', async (req,res) => {
+  app.get('/show', async (req, res) => {
     try {
       const youser = await Userinfo.find()
       res.send(youser)
     }
-    catch(err){
+    catch (err) {
       res.send(err.message)
     }
-  } )
+  })
 }
 

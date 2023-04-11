@@ -9,12 +9,13 @@ const UnAuthGuard = ({ component }) => {
 		checkToken();
 	}, [component]);
 
-	const checkToken = async () => {
+	const checkToken = () => {
 		try {
-			let user = await localStorage.getItem('token');
-			if (!user) {
+			let user = localStorage.getItem('token');
+			if (user === null) {
 				
-			} else {
+			}
+			else {
 				navigate(`/login`);
 			}
 			setStatus(true);
