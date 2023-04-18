@@ -4,22 +4,26 @@ import axios from 'axios'
 const checkToken_api = 'http://localhost:8080/check'
 
 const AuthGuard = ({ component }) => {
-	const [status, setStatus] = useState(false);
+	// const [status, setStatus] = useState(false);
 	const navigate = useNavigate();
 
 	useEffect(() => {
 		checkToken();
 	}, [component]);
-
 	const checkToken = async () => {
 		axios.post(checkToken_api, {
             token: localStorage.getItem('token')
         }).then((res) => {
-            if (res.data.chk == false) {
-                navigate(`/Login`);
-            }
-            setStatus(true);
-			return;
+            if (res.data.chk == true) {
+				// console.log(component);
+				// setStatus(true);
+			}
+			else { navigate(`/Login`)};
+            // setStatus(true);
+			// console.log(component);
+			// console.log(res.data.chk)
+			// console.log("1")
+			return
         })
             .catch((err) => {
                 console.log(err)
@@ -38,6 +42,6 @@ const AuthGuard = ({ component }) => {
 		// }
 	}
 
-	return status ? <React.Fragment>{component}</React.Fragment> : <React.Fragment></React.Fragment>;
+	return <React.Fragment>{component}</React.Fragment> 
 }
 export default AuthGuard

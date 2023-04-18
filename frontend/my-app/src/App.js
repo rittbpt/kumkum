@@ -3,27 +3,16 @@ import React, { useEffect, useState } from 'react';
 import AuthRoutes from "./routes/AuthRoutes";
 import UnAuthRoutes from "./routes/UnAuthRoutes";
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-
-const darkTheme = createTheme({
-  palette: {
-    mode: 'dark',
-  },
-});
 
 function App() {
   return (
     <>
-    <ThemeProvider theme={darkTheme}>
       <Browser>
         <Routes>
-          { AuthRoutes }
-          { UnAuthRoutes }
-          {/* <Route path="/Register" element={<Register />} />, */}
-
+          {AuthRoutes}
+          {UnAuthRoutes}
         </Routes>
       </Browser>
-      </ThemeProvider>
     </>
 
   )

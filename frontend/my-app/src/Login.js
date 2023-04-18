@@ -14,7 +14,9 @@ function Login() {
 	const [ch, setCh] = React.useState(0)
 	const navigate = useNavigate();
 
-	const handleRegister = () => { navigate('/Register') };
+	const handleRegister = () => { 
+		window.location.href = '/Register' 
+	};
 	const logindata = (e) => {
 		e.preventDefault()
 		axios.post(login_api, {
@@ -24,21 +26,30 @@ function Login() {
 			if (res.data.ch == 2) {
 				localStorage.setItem('token', res.data.token)
 				setCh(1)
-				setShowAlert(true)
+				setShowAlert(true);
+				setTimeout(() => {
+					setShowAlert(false);
+				}, 3000);
 				setInterval(() => {
-					navigate('/Home')
-				}, 1500)
+					window.location.href = '/home'
+				}, 1000)
 				return
 			}
 			if (res.data.ch == 1) {
 				setCh(2)
-				setShowAlert(true)
+				setShowAlert(true);
+				setTimeout(() => {
+					setShowAlert(false);
+				}, 3000);
 				return
 
 			}
-			if (res.data.ch == 3 ){
+			if (res.data.ch == 3) {
 				setCh(3)
-				setShowAlert(true)
+				setShowAlert(true);
+				setTimeout(() => {
+					setShowAlert(false);
+				}, 3000);
 			}
 		})
 			.catch((err) => {
@@ -48,9 +59,9 @@ function Login() {
 
 	return (
 		<>
-		<div className="container">
-			{showAlert && (Alertt(ch))}
-			<br/>
+			<div>
+				{showAlert && (Alertt(ch))}
+			</div>
 			<div className="login-container">
 				<h1>WELCOME</h1>
 				<h2>Login</h2>
@@ -80,7 +91,6 @@ function Login() {
 					<h3>Don't have an account?</h3>
 					<button onClick={handleRegister}>Register</button>
 				</div>
-			</div>
 			</div>
 		</>
 	);

@@ -1,90 +1,163 @@
 import axios from 'axios';
-import React, { useState } from 'react';
-import Alertt from './Alert';
+import React, { useState, useEffect } from 'react';
 import './test.css';
+import Sidebar from './Sidebar';
+import { useNavigate } from 'react-router-dom';
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
+import CircleIcon from '@mui/icons-material/Circle';
+import TextField from '@mui/material/TextField';
+import Checkbox from '@mui/material/Checkbox';
+
+const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
+
+var start = 0
+var end = 3
+
+const getitem_api = 'http://localhost:8080/getitem'
 
 function Showuser() {
-  const [check, setCheck] = React.useState(false);
+  const [check, setCheck] = React.useState(true);
   const [data, setData] = React.useState([]);
-  const [showAlert, setShowAlert] = React.useState(false);
+  const [load, setLoad] = React.useState(true);
+  const [load2, setLoad2] = React.useState(false);
+  const [more, setMore] = React.useState(false);
+  const [x, setX] = React.useState("")
+  const [nodata, setNodata] = React.useState(false)
+  const [cb1, setCb1] = React.useState(false)
+  const [cb2, setCb2] = React.useState(false)
+  const [cb3, setCb3] = React.useState(false)
+  const [cb4, setCb4] = React.useState(false)
+  const [opt, setOpt] = React.useState([])
+
+  useEffect(() => {
+    show();
+  }, [x]);
+
+  const handleCheckboxChange = (cbIndex) => {
+    switch (cbIndex) {
+      case 1:
+        setCb1(!cb1);
+        break;
+      case 2:
+        setCb2(!cb2);
+        break;
+      case 3:
+        setCb3(!cb3);
+        break;
+      case 4:
+        setCb4(!cb4);
+        break;
+      default:
+        break;
+    }
+    setarr();
+  }
+
 
   const show = () => {
-    setCheck(true);
-    axios.get('http://localhost:8080/show').then((res) => {
+    axios.post(getitem_api, {
+      start: start,
+      end: end,
+      x: x,
+      opt: opt
+    }).then((res) => {
+      console.log(res)
+      if (res.data.length == 0) {
+        setNodata(true)
+      }
+      else {setNodata(false)}
       setData(res.data);
-      console.log(data)
-      setCheck(true);
+      setLoad(false)
+      setLoad2(false)
+      setCheck(false);
+      setMore(true)
+
+      if (res.data.length < end) {
+        setMore(false)
+      }
     });
-  };
-  
-  const closeshow = () => {
-    setCheck(false);
+    return
   };
 
-  const logout = () => {
-    setShowAlert(true);
-  };
+  const setarr = () => {
+    var arr = []
+    if (cb1 == true) {
+      arr.push("0")
+    }
+    if (cb2 == true) {
+      arr.push("1")
+    }
+    if (cb3 == true) {
+      arr.push("2")
+    }
+    if (cb4 == true) {
+      arr.push("3")
+    }
+    setOpt(arr)
+    show()
+    return
+  }
 
-  const [ch,setCh] = React.useState(false);
-  const handleLogout = () => {
-    localStorage.clear();
-    setCh(7)
-    setShowAlert(true);
-    setTimeout(() => {
-      window.location.href = './Login';
-    }, 1500);
-  };
+  const getmore = () => {
+    setMore(false)
+    setLoad2(true)
+    end += 4
+    show()
+    return
+  }
 
   return (
-    <div className="container">
-      {showAlert && Alertt(ch)}
-      <button onClick={(e) => show()} type="submit" className="btn btn-primary">
-        <h3>Show</h3>
-      </button>
-      {check && (
-        <div className="table-container">
-          <table>
-            <thead>
-              <tr>
-                <th>Username</th>
-                <th>Firstname</th>
-                <th>Lastname</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.map((item) => (
-                <tr key={item.id}>
-                  <td>{item.username}</td>
-                  <td>{item.first_name}</td>
-                  <td>{item.last_name}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <button onClick={(e) => closeshow()} type="submit" className="btn btn-primary">
-            Close
-          </button>
-        </div>
-      )}
-      <button onClick={(e) => logout()} type="submit" className="btn btn-primary">
-        <h3>Logout</h3>
-      </button>
-      {showAlert && (
-        <div className="popup">
-          <div className="popup-inner">
+    <>
+      {check && show()}
+      <div>
+        <Sidebar />
+      </div>
+      <div>
+        {load && <Box className='load2'>
+          <CircularProgress />
+          <p>Loading ...</p>
+        </Box>}
+        <Box className='searchbox'>
+          <TextField onChange={e => {
+            setX(e.target.value.toString().trim())
+          }} />
+          <Checkbox {...label} color="default" onChange={() => handleCheckboxChange(1)} />
+          <CircleIcon className='tag0'></CircleIcon>
+
+          <Checkbox {...label} color="default" onChange={() => handleCheckboxChange(2)} />
+          <CircleIcon className='tag1'></CircleIcon>
+          
+          <Checkbox {...label} color="default" onChange={() => handleCheckboxChange(3)} />
+          <CircleIcon className='tag2'></CircleIcon>
+
+          <Checkbox {...label} color="default" onChange={() => handleCheckboxChange(4)} />
+          <CircleIcon className='tag3'></CircleIcon>
+
+        </Box>
+        {nodata && (<h2 className='nodata'>Not found data!</h2>)}
+        {data?.map((item) => (
+          <div className='box'>
             <div>
-              <p>Are you sure you want to log out?</p>
-              <button onClick={(e) => handleLogout()} type="submit" className="boutton">
-                Log out
-              </button>
-              <button onClick={() => setShowAlert(false)} type="submit" className="boutton">
-                Cancel
-              </button>
+              <CircleIcon className={item.tag}></CircleIcon>
+              <h2>No. {item.item_id}</h2>
+              <p>process: {item.process}</p>
+              <p>deadline: {item.duedate}</p>
+              <p>name: {item.order_name}</p>
             </div>
           </div>
-        </div>
-      )}
-  </div>
+        ))}
+        {load2 && (<Box className='load'>
+          <CircularProgress />
+        </Box>)}
+        {more && (
+          <button onClick={(e) => getmore()} className='showmore'>
+            <h3>Show more</h3>
+          </button>
+        )}
+      </div>
+
+    </>
   );
 }
 

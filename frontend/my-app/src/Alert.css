@@ -1,0 +1,20 @@
+.custom-alert {
+    position: fixed;
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    animation: bounce 0.5s linear;
+  }
+  
+  /* @keyframes bounce {
+    0% {
+      transform: translate(0, 0);
+    }
+    50% {
+      transform: translate(0, -10px);
+    }
+    100% {
+      transform: translate(0, 0);
+    }
+  } */

@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 const UnAuthGuard = ({ component }) => {
 	const [status, setStatus] = useState(false);
 	const navigate = useNavigate();
-
 	useEffect(() => {
 		checkToken();
 	}, [component]);

@@ -25,16 +25,25 @@ function Register() {
             if (res.data.ch == 1) {
                 setCh(4)
 				setShowAlert(true)
+                setTimeout(() => {
+					setShowAlert(false);
+				}, 3000);
                 return
             }
             if (res.data.ch == 2) {
                 setCh(5)
 				setShowAlert(true)
+                setTimeout(() => {
+					setShowAlert(false);
+				}, 3000);
                 return
             }
             if (res.data.ch == 3) {
                 setCh(6)
 				setShowAlert(true)
+                setTimeout(() => {
+					setShowAlert(false);
+				}, 3000);
                 setInterval(() => {
 					window.location.href = '/Login'
 				}, 1500)
@@ -50,7 +59,7 @@ function Register() {
             {showAlert && (Alertt(ch))}
             <div className="login-container">
                 <h1>WELCOME</h1>
-                <h2>Login</h2>
+                <h2>Register</h2>
                 <form>
                     <label htmlFor="Inputfistname">firstname</label>
                     <input
