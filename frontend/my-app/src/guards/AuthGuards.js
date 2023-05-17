@@ -15,31 +15,13 @@ const AuthGuard = ({ component }) => {
             token: localStorage.getItem('token')
         }).then((res) => {
             if (res.data.chk == true) {
-				// console.log(component);
-				// setStatus(true);
 			}
 			else { navigate(`/Login`)};
-            // setStatus(true);
-			// console.log(component);
-			// console.log(res.data.chk)
-			// console.log("1")
 			return
         })
             .catch((err) => {
                 console.log(err)
             })
-		// try {
-		// 	let token = await localStorage.getItem('token');
-			
-		// 	console.log(token.data.username)
-		// 	if (token === null) {
-		// 		navigate(`/Login`);
-		// 	}
-		// 	setStatus(true);
-		// 	return;
-		// } catch (error) {
-		// 	navigate(`/Login`);
-		// }
 	}
 
 	return <React.Fragment>{component}</React.Fragment> 

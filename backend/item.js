@@ -46,18 +46,22 @@ module.exports = function (app) {
             const pos = req.body
             const j = await iteminfo.find()
             var item = []
-            console.log(pos)
             if (pos.x.trim() == '') {
                 for (var i = pos.start; i <= j.length; i++) {
-                    // console.log(j[i])
                     if (item.length == pos.end + 1) { break }
                     if (j[i] == undefined) { break }
-                    if (pos.opt.length == 0) {
-                        item.push(j[i])
+                    if ((pos.opt[0] == '-1') && (pos.opt[1] == '-1') && (pos.opt[2] == '-1') && (pos.opt[3] == '-1')) {
+                        res.json([])
+                        return
                     }
                     else {
-                        for (var k = 0; k < pos.opt.length; k++) {
-                            if (pos.opt[k] == j[i].tag.slice(-1)) {
+                        var dumopt = []
+                        for (let rin = 0; rin < pos.opt.length; rin++) {
+                            if (pos.opt[rin] == '-1') { continue }
+                            dumopt.push(pos.opt[rin])
+                        }
+                        for (var k = 0; k < dumopt.length; k++) {
+                            if (dumopt[k] == j[i].tag.slice(-1)) {
                                 item.push(j[i])
                                 break
                             }
@@ -65,20 +69,25 @@ module.exports = function (app) {
                     }
 
                 }
-                // console.log(item)
+                console.log(item)
                 res.json(item)
                 return
             }
-            console.log("1")
             for (var i = pos.start; i < j.length; i++) {
                 if (item.length == pos.end + 1) { break }
                 if (j[i].item_id.toString().slice(0, pos.x.length) == pos.x) {
-                    if (pos.opt.length == 0) {
-                        item.push(j[i])
+                    if ((pos.opt[0] == '-1') && (pos.opt[1] == '-1') && (pos.opt[2] == '-1') && (pos.opt[3] == '-1')) {
+                        res.json([])
+                        return
                     }
                     else {
-                        for (var k = 0; k < pos.opt.length; k++) {
-                            if (pos.opt[k] == j[i].tag.slice(-1)) {
+                        var dumopt = []
+                        for (let rin = 0; rin < pos.opt.length; rin++) {
+                            if (pos.opt[rin] == '-1') { continue }
+                            dumopt.push(pos.opt[rin])
+                        }
+                        for (var k = 0; k < dumopt.length; k++) {
+                            if (dumopt[k] == j[i].tag.slice(-1)) {
                                 item.push(j[i])
                                 break
                             }
@@ -86,8 +95,20 @@ module.exports = function (app) {
                     }
                 }
             }
+            console.log(item)
             res.json(item)
             // const item = await iteminfo.find({item_id:parseInt(iditem.item_id)})
+        }
+        catch (err) {
+            res.send(err)
+            console.log(err.message)
+        }
+    })
+    app.post('/findedititem', async (req, res) => {
+        try {
+            const iditem = req.body
+            const item = await iteminfo.find({ item_id: iditem.item_id })
+            res.send(item[0])
         }
         catch (err) {
             console.log(err.message)

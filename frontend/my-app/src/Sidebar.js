@@ -75,6 +75,8 @@ const Sidebar = () => {
                 color="inherit"
                 aria-label="menu"
                 onClick={toggleDrawer(true)}
+                size="large"
+                
             >
                 <MenuIcon />
             </IconButton>

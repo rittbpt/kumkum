@@ -1,4 +1,4 @@
-import { BrowserRouter as Browser, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Browser, Route, Routes, Switch } from "react-router-dom";
 import React, { useEffect, useState } from 'react';
 import AuthRoutes from "./routes/AuthRoutes";
 import UnAuthRoutes from "./routes/UnAuthRoutes";
@@ -9,8 +9,10 @@ function App() {
     <>
       <Browser>
         <Routes>
+  
           {AuthRoutes}
           {UnAuthRoutes}
+          
         </Routes>
       </Browser>
     </>

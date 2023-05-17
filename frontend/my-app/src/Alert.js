@@ -7,9 +7,7 @@ function Alertt(check) {
     if (check == 1) {
         return (
             <Alert className="custom-alert"
-    
-                severity="success"
-                >
+                severity="success">
                     < AlertTitle > Login Success</AlertTitle >
                         You have successfully logged in !
                 </Alert >

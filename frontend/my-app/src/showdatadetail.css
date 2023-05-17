@@ -1,0 +1,10 @@
+.edit-container {
+    margin-top: 10%;
+    margin-left: 35%;
+    max-width: 300px;
+    padding: 40px;
+    border: 2px solid rgb(213, 213, 213);
+    background-color: #fbf7f7;
+    border-radius: 5px;
+    justify-content: center
+}
